@@ -132,7 +132,8 @@ int RawClusterBuilderv1::process_event(PHCompositeNode *topNode)
 
   int iphi, ieta;
   float phi, eta;
-  float dphi, phistep, deta, etastep;
+  //float dphi, phistep;
+float  deta, etastep;
 
   std::pair<double, double> beta;
   vector<EmcModule>::iterator ph;
@@ -162,15 +163,15 @@ int RawClusterBuilderv1::process_event(PHCompositeNode *topNode)
       // Tower with max energy
       hmax = pp->GetMaxTower();
 
-      //      phi = (xcg-float(NPHI)/2.+0.5)/float(NPHI)*2.*M_PI;
+            phi = (xcg-float(NPHI)/2.+0.5)/float(NPHI)*2.*M_PI;
       //      eta = (ycg-float(NETA)/2.+0.5)/float(NETA)*2.2; // -1.1<eta<1.1;
 
-      iphi = xcg+0.5;
-      dphi = xcg - float(iphi); // this is from -0.5 to +0.5
-      phi = towergeom->get_phicenter(iphi);
-      std::pair<double, double> phibounds = towergeom->get_phibounds(iphi);
-      phistep = phibounds.second - phibounds.first;
-      phi += dphi*phistep;
+	    // iphi = xcg+0.5;
+	    // dphi = xcg - float(iphi); // this is from -0.5 to +0.5
+      //phi = towergeom->get_phicenter(iphi);
+      //std::pair<double, double> phibounds = towergeom->get_phibounds(iphi);
+      //phistep = phibounds.second - phibounds.first;
+      //phi += dphi*phistep;
 
       ieta = ycg+0.5;
       deta = ycg - float(ieta); // this is from -0.5 to +0.5
@@ -194,7 +195,8 @@ int RawClusterBuilderv1::process_event(PHCompositeNode *topNode)
 	// that code needs a closer look - here are the towers 
 	// with their energy added to the cluster object where 
 	// the id is the tower id
-	RawTowerDefs::keytype twrkey = RawTowerDefs::encode_towerid( RawTowerDefs::NONE , ieta , iphi );
+	//RawTowerDefs::keytype twrkey = RawTowerDefs::encode_towerid( RawTowerDefs::NONE , ieta , iphi );
+	RawTowerDefs::keytype twrkey = RawTowerDefs::encode_towerid( towers->getCalorimeterID() , ieta , iphi );
 	cluster->addTower(twrkey,(*ph).amp/fEnergyNorm);
 	ph++;
       }
